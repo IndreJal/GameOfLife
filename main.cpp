@@ -36,14 +36,8 @@ int main(int argc, char *argv[])
 
 
     // connect our QML signal to our C++ slot
-    QObject::connect(window, SIGNAL(goButtonClicked(QVariant)),
-                         &handleStartGameButton, SLOT(handleStartGameButtonClick(QVariant)));
-
-    QObject::connect(window, SIGNAL(goButtonClicked2(QString)),
-                         &handleStartGameButton, SLOT(handleStartGameButtonClick2(QString)));
-
-    QObject::connect(window, SIGNAL(goButtonClicked0(QVariant, int, int)),
-                         &handleStartGameButton, SLOT(handleStartGameButtonClick0(QVariant, int, int)));
+    QObject::connect(window, SIGNAL(goButtonClicked(QVariant, int, int)),
+                         &handleStartGameButton, SLOT(handleStartGameButtonClick(QVariant, int, int)));
 
     // connect our C++ signal to our QML slot
     // NOTE: if we want to pass an parameter to our QML slot, it has to be

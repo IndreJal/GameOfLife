@@ -21,9 +21,9 @@ HandleStartGameButton::HandleStartGameButton(QObject *parent) : QObject(parent)
 
 }
 
-void HandleStartGameButton::handleStartGameButtonClick0(const QVariant &in, int gridWidth, int gridHeight)
+void HandleStartGameButton::handleStartGameButtonClick(const QVariant &in, int gridWidth, int gridHeight)
 {
-    qDebug() << "HandleStartGameButton::handleStartGameButtonClick0 - " << in;
+    qDebug() << "HandleStartGameButton::handleStartGameButtonClick - " << in;
 
     QVariantList cellsList = in.toList();
     bool isPopulated;
@@ -118,67 +118,4 @@ int countAdjacent(int s, int width, int height, bool list[]){
         counter += list[s+width+1];
 
     return counter;
-}
-
-void HandleStartGameButton::handleStartGameButtonClick(const QVariant &in)
-{
-
-    qDebug() << "HandleStartGameButton::handleStartGameButtonClick - " << in.type();
-
-    QQuickItem *item = qobject_cast<QQuickItem*>(in.value<QObject*>());
-
-    //qDebug() << "TREE:";
-    //item->dumpObjectTree();
-    //qDebug() << "INFO:";
-    //item->dumpObjectInfo();
-
-    QQuickItem * gridItem = item->findChild<QQuickItem *>("gridItem");
-    qDebug() << "grid height :" << gridItem->property("rows") << "; grid width: " << gridItem->property("columns");
-
-    QQuickItem * repeaterItem = item->findChild<QQuickItem *>("repeaterItem");
-    qDebug() << "repeater name " << repeaterItem->objectName();
-    qDebug() << "repeater size: " << repeaterItem->property("model");
-
-    QObject * rep = item->findChild<QQuickItem *>("repeaterItem");
-    //qDebug() << "repeater size: " << rep->property("model");
-
-
-
-    //QQmlProperty prop(r, "color");
-    //qDebug() << "rect color " << prop.read();
-
-    //qDebug() << "comp size: " << comp->qmlAttachedProperties();
-
-    qDebug() << "done";
-    QStringList values;
-    int listSize = rep->property("model").toInt();
-
-    for (int i = 0; i < listSize; i++){
-        if (i%2 == 0){
-            values.append("black");
-        }
-        else
-            values.append("white");
-    }
-
-    qDebug() << "string list size " << values.size();
-
-    emit setGridValues(values, listSize);
-
-    qDebug() << "signal emitted " ;
-
-
-//    QList<QQuickItem *> itemChildren = item->findChildren<QQuickItem *>();
-//    for(int i = 0; i < itemChildren.size(); i++)
-//    {
-//        qDebug() << "Child num " << i << " : ";
-//        qDebug() << itemChildren.at(i);
-//    }
-
-}
-
-void HandleStartGameButton::handleStartGameButtonClick2(const QString &in)
-{
-    qDebug() << "HandleStartGameButton::handleStartGameButtonClick2 - " << in;
-    //QObject *grid = object->findChild*>
 }

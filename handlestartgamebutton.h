@@ -17,10 +17,7 @@ signals:
     void setGridValues(QVariant text, QVariant size);
 
 public slots:
-    void handleStartGameButtonClick0(const QVariant &in, int w, int h);
-    void handleStartGameButtonClick(const QVariant &in);
-    void handleStartGameButtonClick2(const QString &in);
-
+    void handleStartGameButtonClick(const QVariant &in, int w, int h);
 };
 
 #endif // HANDLESTARTGAMEBUTTON_H

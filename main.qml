@@ -8,9 +8,7 @@ Window {
     property alias executionSpeed: speed.text
     property var cellsList: []
 
-    signal goButtonClicked(var grid)
-    signal goButtonClicked2(string str)
-    signal goButtonClicked0(var cells, int w, int h)
+    signal goButtonClicked(var cells, int w, int h)
 
     id: window
     visible: true
@@ -26,7 +24,7 @@ Window {
         }
         //delay(1000);
         //populateCellValueList(repeater);
-        //goButtonClicked0(cellsList, gridW, gridH);
+        //goButtonClicked(cellsList, gridW, gridH);
 
     }
 
@@ -127,7 +125,7 @@ Window {
             console.debug("Signal emitted")
             //goButtonClicked(gamegrid)
             populateCellValueList(repeater)
-            goButtonClicked0(cellsList, gridW, gridH)
+            goButtonClicked(cellsList, gridW, gridH)
         }
 
     }
