@@ -5,16 +5,38 @@ import QtQuick.Controls 2.15
 Window {
     property alias gridW: sizex.value
     property alias gridH: sizey.value
-    //property alias cellWidth: cellsize.text
     property alias executionSpeed: speed.text
+    property var cellsList: []
 
-    signal goButtonClicked(msg: string)
+    signal goButtonClicked(var grid)
+    signal goButtonClicked2(string str)
+    signal goButtonClicked0(var cells, int w, int h)
 
     id: window
     visible: true
     width: 500
     height: 500
     title: qsTr("Game of Life")
+    objectName: "MainWindow"
+
+    function setGridValues(values, n){
+        console.log("sqml slot received");
+        for (var i = 0; i < n; i++){
+            repeater.itemAt(i).color = values[i];
+        }
+        //delay(1000);
+        //populateCellValueList(repeater);
+        //goButtonClicked0(cellsList, gridW, gridH);
+
+    }
+
+    function delay(duration) { // In milliseconds
+        var timeStart = new Date().getTime();
+
+        while (new Date().getTime() - timeStart < duration) {
+            // Do nothing
+        }
+    }
 
     DataEntryLabel {
         id: gridsizelabel
@@ -30,6 +52,11 @@ Window {
         anchors.bottom: gridsizelabel.bottom
         anchors.left: gridsizelabel.right
         anchors.top: gridsizelabel.top
+        onValueChanged: {
+            goButtonClicked2("sizex");
+            item.gridWidth = gridW;
+            cellsList = [];
+        }
     }
 
     DataEntryLabel {
@@ -48,6 +75,11 @@ Window {
         anchors.bottom: gridsizelabel.bottom
         anchors.left: labelx.right
         anchors.top: gridsizelabel.top
+        onValueChanged: {
+            goButtonClicked2("sizey");
+            item.gridHeight = gridH;
+            cellsList = [];
+        }
     }
 
 /*
@@ -91,25 +123,76 @@ Window {
         anchors.top: speed.bottom
         anchors.topMargin: 10
 
-
-
         onClicked: {
             console.debug("Signal emitted")
-            goButtonClicked("Hello from QML")
-
+            //goButtonClicked(gamegrid)
+            populateCellValueList(repeater)
+            goButtonClicked0(cellsList, gridW, gridH)
         }
 
     }
 
-    GameGrid {
-        id: gamegrid
+    function populateCellValueList(rep){
+        console.log("populateCellValueList start");
+        for (var i = 0; i < rep.count; i++){
+            cellsList[i] = rep.itemAt(i).color;
+        }
+        console.log("populateCellValueList end")
+    }
+
+    Item {
+        property alias gridWidth: grid.columns
+        property alias gridHeight: grid.rows
+
+        id: item
         width: parent.width - 100
         anchors.top: goButton.bottom
         anchors.topMargin: 10
         anchors.left: speedlabel.left
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 50
-        gridWidth: gridW
-        gridHeight: gridH
+        objectName: "gameGrid"
+
+        ScrollView {
+            id: gamegrid
+            anchors.fill: parent
+            clip: true
+            contentHeight: grid.height
+            contentWidth: grid.width
+
+            Grid {
+                id: grid
+                rows: 10
+                columns: 10
+                spacing: 0
+                objectName: "gridItem"
+
+                Repeater {
+                    id: repeater
+                    model: grid.rows * grid.columns
+                    objectName: "repeaterItem"
+
+                    Rectangle {
+                        id: cell
+                        width: 10
+                        height: 10
+                        border.color: "black"
+                        border.width: 0.5
+                        objectName: "cell" + index
+
+                        MouseArea {
+                            anchors.fill:  cell
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            onClicked: {
+                                if (mouse.button == Qt.RightButton)
+                                    parent.color = 'white'
+                                else
+                                    parent.color = 'black'
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

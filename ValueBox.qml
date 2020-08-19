@@ -9,5 +9,6 @@ SpinBox {
     editable: true
     stepSize: 50
     to: 10000
+    value: 10
     font.pixelSize: gridsizelabel.font.pixelSize
 }

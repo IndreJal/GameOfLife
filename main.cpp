@@ -4,6 +4,7 @@
 #include <QQuickWindow>
 #include <QMetaObject>
 #include <QMetaMethod>
+#include <QQuickView>
 
 
 int main(int argc, char *argv[])
@@ -34,10 +35,21 @@ int main(int argc, char *argv[])
     QQuickWindow *window = qobject_cast<QQuickWindow *>(topLevel);
 
 
-
     // connect our QML signal to our C++ slot
-    QObject::connect(window, SIGNAL(goButtonClicked(QString)),
-                         &handleStartGameButton, SLOT(handleStartGameButtonClick(QString)));
+    QObject::connect(window, SIGNAL(goButtonClicked(QVariant)),
+                         &handleStartGameButton, SLOT(handleStartGameButtonClick(QVariant)));
+
+    QObject::connect(window, SIGNAL(goButtonClicked2(QString)),
+                         &handleStartGameButton, SLOT(handleStartGameButtonClick2(QString)));
+
+    QObject::connect(window, SIGNAL(goButtonClicked0(QVariant, int, int)),
+                         &handleStartGameButton, SLOT(handleStartGameButtonClick0(QVariant, int, int)));
+
+    // connect our C++ signal to our QML slot
+    // NOTE: if we want to pass an parameter to our QML slot, it has to be
+    // a QVariant.
+    QObject::connect(&handleStartGameButton, SIGNAL(setGridValues(QVariant, QVariant)),
+                         window, SLOT(setGridValues(QVariant, QVariant)));
 
 
     // Assuming you've instantiated QQuickItem* item
@@ -52,4 +64,6 @@ int main(int argc, char *argv[])
     */
 
     return app.exec();
+
+
 }
