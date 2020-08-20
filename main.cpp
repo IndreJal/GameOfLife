@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
     // connect our C++ signal to our QML slot
     // NOTE: if we want to pass an parameter to our QML slot, it has to be
-    // a QVariant.
+    // a QVariant
     QObject::connect(&handleStartGameButton, SIGNAL(setGridValues(QVariant, QVariant)),
                          window, SLOT(setGridValues(QVariant, QVariant)));
 

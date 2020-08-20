@@ -123,11 +123,9 @@ Window {
 
         onClicked: {
             console.debug("Signal emitted")
-            //goButtonClicked(gamegrid)
             populateCellValueList(repeater)
             goButtonClicked(cellsList, gridW, gridH)
         }
-
     }
 
     function populateCellValueList(rep){

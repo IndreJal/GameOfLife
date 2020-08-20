@@ -13,7 +13,7 @@
 #include <QQuickItem>
 #include <QRect>
 #include <cmath>
-#include <chrono>
+//#include <chrono>
 #include <thread>
 
 HandleStartGameButton::HandleStartGameButton(QObject *parent) : QObject(parent)
@@ -63,18 +63,24 @@ void HandleStartGameButton::handleStartGameButtonClick(const QVariant &in, int g
 
         //Convert bool list into QStringList
         QStringList colorValuesToReturn;
-        QString colorValue
-                ;
+        QString colorValue;
+        QColor colorValueVar;
+        cellsList.clear();
+
         for(int i = 0; i < gridSize; i++){
             colorValue = "white";
-            if(colorValuesToUpdateBool[i] == true)
+            colorValueVar = "white";
+            if(colorValuesToUpdateBool[i] == true){
                 colorValue = "black";
+                colorValueVar = "black";
+            }
             colorValuesToReturn.append(colorValue);
+            cellsList.append(colorValueVar);
         }
 
-        //Sleep(1000);
         //Send signal back to QML to update grid
         emit setGridValues(colorValuesToReturn, gridSize);
+        //Sleep(1000);
 
         //Reset values
         //colorValuesToReturn.clear();
@@ -82,9 +88,7 @@ void HandleStartGameButton::handleStartGameButtonClick(const QVariant &in, int g
         //    cellsListInBool[i] = colorValuesToUpdateBool[i];
         //}
 
-        //Pause
-
-        //emit handleStartGameButtonClick0(colorValuesToReturn, gridWidth, gridHeight);
+        //emit handleStartGameButtonClick(cellsList, gridWidth, gridHeight);
     //}
 }
 
