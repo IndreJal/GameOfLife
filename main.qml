@@ -8,7 +8,9 @@ Window {
     property alias executionSpeed: speed.text
     property var cellsList: []
 
-    signal goButtonClicked(var cells, int w, int h)
+    signal startButtonClicked(var cells, int w, int h, int v)
+    signal stopButtonClicked()
+    signal repeatCycle(var cells, int w, int h)
 
     id: window
     visible: true
@@ -17,24 +19,14 @@ Window {
     title: qsTr("Game of Life")
     objectName: "MainWindow"
 
-    function setGridValues(values, n){
-        console.log("sqml slot received");
+    function onSetGridValues(values, n){
         for (var i = 0; i < n; i++){
             repeater.itemAt(i).color = values[i];
         }
-        //delay(1000);
-        //populateCellValueList(repeater);
-        //goButtonClicked(cellsList, gridW, gridH);
-
+        populateCellValueList(repeater)
+        repeatCycle(cellsList, gridW, gridH);
     }
 
-    function delay(duration) { // In milliseconds
-        var timeStart = new Date().getTime();
-
-        while (new Date().getTime() - timeStart < duration) {
-            // Do nothing
-        }
-    }
 
     DataEntryLabel {
         id: gridsizelabel
@@ -51,7 +43,6 @@ Window {
         anchors.left: gridsizelabel.right
         anchors.top: gridsizelabel.top
         onValueChanged: {
-            goButtonClicked2("sizex");
             item.gridWidth = gridW;
             cellsList = [];
         }
@@ -74,29 +65,11 @@ Window {
         anchors.left: labelx.right
         anchors.top: gridsizelabel.top
         onValueChanged: {
-            goButtonClicked2("sizey");
             item.gridHeight = gridH;
             cellsList = [];
         }
     }
 
-/*
-    DataEntryLabel {
-        id: cellsizelabel
-        width: 120
-        text: qsTr("Cell size in pixels:")
-        anchors.top: gridsizelabel.bottom
-        anchors.topMargin: 10
-        anchors.left: gridsizelabel.left
-    }
-
-    Dataentrycell {
-        id: cellsize
-        anchors.left: cellsizelabel.right
-        anchors.bottom: cellsizelabel.bottom
-        anchors.top: cellsizelabel.top
-    }
-*/
     DataEntryLabel {
         id: speedlabel
         width: 150
@@ -111,29 +84,40 @@ Window {
         anchors.left: speedlabel.right
         anchors.bottom: speedlabel.bottom
         anchors.top: speedlabel.top
+        text: "500"
     }
 
     Button {
-        id: goButton
+        id: startButton
         text: "Start game"
+        anchors.right: stopButton.left
+        anchors.rightMargin: 10
+        anchors.top: speed.bottom
+        anchors.topMargin: 10
+
+        onClicked: {
+            populateCellValueList(repeater)
+            startButtonClicked(cellsList, gridW, gridH, executionSpeed)
+        }
+    }
+
+    Button {
+        id: stopButton
+        text: "Stop game"
         anchors.right: parent.right
         anchors.rightMargin: 50
         anchors.top: speed.bottom
         anchors.topMargin: 10
 
         onClicked: {
-            console.debug("Signal emitted")
-            populateCellValueList(repeater)
-            goButtonClicked(cellsList, gridW, gridH)
+            stopButtonClicked()
         }
     }
 
     function populateCellValueList(rep){
-        console.log("populateCellValueList start");
         for (var i = 0; i < rep.count; i++){
             cellsList[i] = rep.itemAt(i).color;
         }
-        console.log("populateCellValueList end")
     }
 
     Item {
@@ -142,7 +126,7 @@ Window {
 
         id: item
         width: parent.width - 100
-        anchors.top: goButton.bottom
+        anchors.top: startButton.bottom
         anchors.topMargin: 10
         anchors.left: speedlabel.left
         anchors.bottom: parent.bottom
