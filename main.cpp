@@ -1,9 +1,10 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <handlestartgamebutton.h>
 #include <QQuickWindow>
 #include <QMetaObject>
 #include <QMetaMethod>
+#include <QQuickView>
+#include "controller.h"
 
 
 int main(int argc, char *argv[])
@@ -14,9 +15,6 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-
-
-
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
@@ -25,31 +23,24 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
 
-
-    //engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-
-    HandleStartGameButton handleStartGameButton;
+    Controller controller;
 
     QObject *topLevel = engine.rootObjects().value(0);
     QQuickWindow *window = qobject_cast<QQuickWindow *>(topLevel);
 
-
-
     // connect our QML signal to our C++ slot
-    QObject::connect(window, SIGNAL(goButtonClicked(QString)),
-                         &handleStartGameButton, SLOT(handleStartGameButtonClick(QString)));
+    QObject::connect(window, SIGNAL(startButtonClicked(QVariant, int, int, int)),
+                         &controller, SLOT(handleStartButton(QVariant, int, int, int)));
 
+    QObject::connect(window, SIGNAL(stopButtonClicked()),
+                         &controller, SLOT(handleStopButton()));
 
-    // Assuming you've instantiated QQuickItem* item
-    // This will print out the signature for every signal/slot on the object
-    // Make sure you include <QMetaObject>, <QMetaMethod>
-    /*
-    const QMetaObject* metaObj = window->metaObject();
-    for (int i = 0; i < metaObj->methodCount(); ++i) {
-        QMetaMethod method = metaObj->method(i);
-        qDebug() << method.methodSignature();
-    }
-    */
+    QObject::connect(window, SIGNAL(repeatCycle(const QVariant, int, int)),
+                         &controller, SLOT(handleRepeatCycle(const QVariant, int, int)));
+
+    // connect our C++ signal to our QML slot
+    QObject::connect(&controller, SIGNAL(setGridValues(QVariant, QVariant)),
+                         window, SLOT(onSetGridValues(QVariant, QVariant)));
 
     return app.exec();
 }

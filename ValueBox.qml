@@ -7,7 +7,8 @@ SpinBox {
     height: gridsizelabel.height
     width: 150
     editable: true
-    stepSize: 50
+    stepSize: 1
     to: 10000
+    value: 10
     font.pixelSize: gridsizelabel.font.pixelSize
 }

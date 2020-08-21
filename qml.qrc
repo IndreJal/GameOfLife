@@ -4,7 +4,6 @@
         <file>Cell.qml</file>
         <file>DataEntryCell.qml</file>
         <file>DataEntryLabel.qml</file>
-        <file>GameGrid.qml</file>
         <file>ValueBox.qml</file>
     </qresource>
 </RCC>
