@@ -7,14 +7,15 @@
 class Worker : public QObject
 {
     Q_OBJECT
+
 public:
     explicit Worker(QObject *parent = nullptr);
-
-private:
     int countAdjacent(int s, int width, int height, bool list[]);
     bool survives(bool currentCellStatus, int liveNeighbours);
     bool convertColorToBool(QVariant color);
     QColor convertBoolToColor(bool isLive);
+
+private:
 
 signals:
     void resultIsReady(QVariant text, QVariant size);

@@ -34,3 +34,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     controller.h \
     worker.h
+
+SUBDIRS += \
+    GOL_Test/GOL_Test.pro
